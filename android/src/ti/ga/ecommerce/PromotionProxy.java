@@ -31,6 +31,10 @@ public class PromotionProxy extends KrollProxy {
         this.promotion.setPosition(this.descriptor.getString("position"));
     }
 
+    public Promotion getNative() {
+        return this.promotion;
+    }
+
     @Kroll.method
     public String toString() {
         String[] keys = {"id", "name", "creative", "position"};

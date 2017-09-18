@@ -39,6 +39,10 @@ public class ProductActionProxy extends KrollProxy {
             this.handleCheckout(this.descriptor.getKrollDict("checkout"));
     }
 
+    public ProductAction getNative() {
+        return this.productAction;
+    }
+
     @Kroll.method
     @Kroll.setProperty
     public void setTransaction(KrollDict args) {

@@ -48,6 +48,10 @@ public class ProductProxy extends KrollProxy {
         this.handleCustomMetrics(this.descriptor.getKrollDict("customMetrics"));
     }
 
+    public Product getNative() {
+        return this.product;
+    }
+
     @Kroll.method
     public String toString() {
         String[] keys = {"id", "name", "category", "brand", "variant", "position", "coupon", "price", "quantity", "customDimensions", "customMetrics"};
