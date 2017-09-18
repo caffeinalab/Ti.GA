@@ -9,9 +9,9 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.util.Log;
 import android.text.TextUtils;
 
+import com.google.android.gms.analytics.HitBuilders.ScreenViewBuilder;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.android.gms.analytics.ecommerce.HitBuilders.ScreenViewBuilder;
 
 @Kroll.proxy(creatableInModule=TigaModule.class)
 public class ScreenViewBuilderProxy extends KrollProxy {
@@ -45,6 +45,6 @@ public class ScreenViewBuilderProxy extends KrollProxy {
     }
 
     public ScreenViewBuilder getNative() {
-        return this.promotion;
+        return this.screenViewBuilder;
     }
 }

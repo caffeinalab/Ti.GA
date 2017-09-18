@@ -1,5 +1,11 @@
 package ti.ga;
 
+import android.util.Log;
+
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.HashMap;
 
 import org.appcelerator.kroll.KrollDict;
@@ -8,20 +14,17 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.util.TiConvert;
 
-import android.util.Log;
-
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
+import ti.ga.ecommerce.ProductProxy;
+import ti.ga.ecommerce.ProductActionProxy;
+import ti.ga.ecommerce.PromotionProxy;
 
 @Kroll.proxy(creatableInModule=TigaModule.class)
 public class TrackerProxy  extends KrollProxy {
-	
+
 	private final GoogleAnalytics _ga;
 	private Tracker _tracker;
 	private boolean _debug = false;
-	
+
 	public TrackerProxy()
 	{
 		super();
@@ -67,23 +70,23 @@ public class TrackerProxy  extends KrollProxy {
 	}
 
 	@Override
-	public void handleCreationDict(KrollDict options) 
+	public void handleCreationDict(KrollDict options)
 	{
 		_debug = options.optBoolean("debug", false);
 		boolean useSecure = options.optBoolean("useSecure", true);
-		
+
 		if(options.containsKey("trackingId")){
 			_tracker = _ga.newTracker(options.getString("trackingId"));
 		}else{
 			Log.e(TigaModule.MODULE_FULL_NAME,"trackingId is required");
 			_tracker = _ga.newTracker("");
 		}
-		
+
 		boolean enableAdvertisingIdCollection=options.optBoolean("enableAdvertisingIdCollection", false);
 		_tracker.enableAdvertisingIdCollection(enableAdvertisingIdCollection);
 		_tracker.setAnonymizeIp(true);
 		_tracker.setUseSecure(useSecure);
-		
+
 		super.handleCreationDict(options);
 	}
 
@@ -112,7 +115,7 @@ public class TrackerProxy  extends KrollProxy {
 			Log.d(TigaModule.MODULE_FULL_NAME,"clearUserID");
 		}
 	}
-	
+
 	@Kroll.method
 	public void startSession(){
 	     // Start a new session with the hit.
@@ -125,9 +128,30 @@ public class TrackerProxy  extends KrollProxy {
 	public void endSession(){
 		if(_debug){
 			Log.d(TigaModule.MODULE_FULL_NAME,"endSession is only available on iOS");
-		}		
+		}
 	}
-	
+
+	@Kroll.method
+	public void trackProductImpression(ProductProxy product, String screenName, @Kroll.argument(optional = true) String impressionList) {
+		HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder();
+
+		builder.addImpression(product.getNative(), impressionList);
+
+		_tracker.setScreenName(screenName);
+		_tracker.send(builder.build());
+	}
+
+	@Kroll.method
+	public void trackProductAction(ProductProxy product, ProductActionProxy action, String screenName) {
+		HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder();
+
+		builder.addProduct(product.getNative());
+		builder.setProductAction(action.getNative());
+
+		_tracker.setScreenName(screenName);
+		_tracker.send(builder.build());
+	}
+
 	@Kroll.method
 	public void addScreenView(String screenName, HashMap props)
 	{
@@ -154,7 +178,7 @@ public class TrackerProxy  extends KrollProxy {
 			Log.d(TigaModule.MODULE_FULL_NAME,"addScreenView:" + screenName);
 		}
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Kroll.method
 	public void addEvent(HashMap props)
@@ -191,9 +215,9 @@ public class TrackerProxy  extends KrollProxy {
 			Log.d(TigaModule.MODULE_FULL_NAME,"addEvent - label:" + label);
 			Log.d(TigaModule.MODULE_FULL_NAME,"addEvent - value:" + Long.toString(value));
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Kroll.method
 	public void addTiming(HashMap props)
@@ -202,7 +226,7 @@ public class TrackerProxy  extends KrollProxy {
 		String category = args.getString("category");
 		String name = args.getString("name");
 		String label = args.getString("label");
-		long time = args.getDouble("time").longValue();	
+		long time = args.getDouble("time").longValue();
 		final HitBuilders.TimingBuilder hitBuilder = new HitBuilders.TimingBuilder();
 
 		hitBuilder.setCategory(category)
@@ -230,9 +254,9 @@ public class TrackerProxy  extends KrollProxy {
 			Log.d(TigaModule.MODULE_FULL_NAME,"addTiming - name:" + name);
 			Log.d(TigaModule.MODULE_FULL_NAME,"addTiming - label:" + label);
 			Log.d(TigaModule.MODULE_FULL_NAME,"addTiming - time:" + Long.toString(time));
-		}		
+		}
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Kroll.method
 	public void addException(HashMap props)
@@ -244,13 +268,13 @@ public class TrackerProxy  extends KrollProxy {
         .setDescription(description)
         .setFatal(isFatal)
         .build());
-		
+
 		if(_debug){
 			Log.d(TigaModule.MODULE_FULL_NAME,"addException - description:" + description);
 			Log.d(TigaModule.MODULE_FULL_NAME,"addException - fatal:" + ((isFatal) ? "true" : "false"));
-		}			
+		}
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Kroll.method
 	public void addSocialNetwork(HashMap props)
@@ -284,6 +308,6 @@ public class TrackerProxy  extends KrollProxy {
 			Log.d(TigaModule.MODULE_FULL_NAME,"addSocialNetwork - network:" + network);
 			Log.d(TigaModule.MODULE_FULL_NAME,"addSocialNetwork - action:" + action);
 			Log.d(TigaModule.MODULE_FULL_NAME,"addSocialNetwork - target:" + target);
-		}		
+		}
 	}
 }

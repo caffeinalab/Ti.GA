@@ -3,6 +3,7 @@
 "/Volumes/Data/Development/Appcelerator/Modules/ti.ga/android/src/ti/ga/ecommerce/ProductActionProxy.java"
 "/Volumes/Data/Development/Appcelerator/Modules/ti.ga/android/src/ti/ga/ecommerce/ProductProxy.java"
 "/Volumes/Data/Development/Appcelerator/Modules/ti.ga/android/src/ti/ga/ecommerce/PromotionProxy.java"
+"/Volumes/Data/Development/Appcelerator/Modules/ti.ga/android/src/ti/ga/ecommerce/ScreenViewBuilderProxy.java"
 "/Volumes/Data/Development/Appcelerator/Modules/ti.ga/android/build/generated/java/ti/ga/TigaBootstrap.java"
 "/Volumes/Data/Development/Appcelerator/Modules/ti.ga/android/build/generated/r/android/support/v7/appcompat/R.java"
 "/Volumes/Data/Development/Appcelerator/Modules/ti.ga/android/build/generated/r/android/support/v7/cardview/R.java"
