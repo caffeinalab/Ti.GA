@@ -21,15 +21,23 @@ import com.google.android.gms.analytics.Logger.LogLevel;
 @Kroll.module(name="Tiga", id="ti.ga")
 public class TigaModule extends KrollModule
 {
-
+	@Kroll.constant public static final String PRODUCT_ACTION_ADD = ProductAction.ACTION_ADD;
+	@Kroll.constant public static final String PRODUCT_ACTION_CHECKOUT = ProductAction.ACTION_CHECKOUT;
+	@Kroll.constant public static final String PRODUCT_ACTION_CHECKOUT_OPTION = ProductAction.ACTION_CHECKOUT_OPTION;
+	@Kroll.constant public static final String PRODUCT_ACTION_CLICK = ProductAction.ACTION_CLICK;
+	@Kroll.constant public static final String PRODUCT_ACTION_DETAIL = ProductAction.ACTION_DETAIL;
+	@Kroll.constant public static final String PRODUCT_ACTION_PURCHASE = ProductAction.ACTION_PURCHASE;
+	@Kroll.constant public static final String PRODUCT_ACTION_REFUND = ProductAction.ACTION_REFUND;
+	@Kroll.constant public static final String PRODUCT_ACTION_REMOVE = ProductAction.ACTION_REMOVE;
+	
 	public static final String MODULE_FULL_NAME = "ti.ga";
 	private final GoogleAnalytics _ga;
 	private int _dispatchInterval = 30;
-	
+
 	public TigaModule()
 	{
 		super();
-		_ga = GoogleAnalytics.getInstance(TiApplication.getInstance().getApplicationContext());		
+		_ga = GoogleAnalytics.getInstance(TiApplication.getInstance().getApplicationContext());
 	}
 
 	@Kroll.onAppCreate
@@ -44,7 +52,7 @@ public class TigaModule extends KrollModule
 	{
 		Log.d(MODULE_FULL_NAME,"setTrackUncaughtExceptions is only available on iOS");
 	}
-	
+
 	@Kroll.method
 	public void setDebug(boolean value) {
 		if(value){
@@ -58,11 +66,11 @@ public class TigaModule extends KrollModule
 	public void dispatch() {
 		_ga.dispatchLocalHits();
 	}
-	
+
 	// Properties
 	@Kroll.getProperty
 	public long getDispatchInterval()
-	{		
+	{
 		return _dispatchInterval;
 	}
 
