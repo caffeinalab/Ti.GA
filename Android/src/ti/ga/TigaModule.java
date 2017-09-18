@@ -15,6 +15,7 @@ import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.kroll.common.Log;
 
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.google.android.gms.analytics.ecommerce.Promotion;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger.LogLevel;
 
@@ -30,6 +31,9 @@ public class TigaModule extends KrollModule
 	@Kroll.constant public static final String PRODUCT_ACTION_PURCHASE = ProductAction.ACTION_PURCHASE;
 	@Kroll.constant public static final String PRODUCT_ACTION_REFUND = ProductAction.ACTION_REFUND;
 	@Kroll.constant public static final String PRODUCT_ACTION_REMOVE = ProductAction.ACTION_REMOVE;
+	
+	@Kroll.constant public static final String PROMOTION_ACTION_CLICK = Promotion.ACTION_CLICK;
+	@Kroll.constant public static final String PROMOTION_ACTION_VIEW = Promotion.ACTION_VIEW;
 
 	public static final String MODULE_FULL_NAME = "ti.ga";
 	private final GoogleAnalytics _ga;
