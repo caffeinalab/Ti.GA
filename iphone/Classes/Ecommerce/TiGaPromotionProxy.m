@@ -49,11 +49,6 @@
 
 #pragma mark Internals
 
-- (GAIEcommercePromotion*)native
-{
-    return _promotion;
-}
-
 - (void)log:(NSString*)string forLevel:(NSString*)level
 {
     NSLog(@"[%@] %@: %@", [level uppercaseString], NSStringFromClass([self class]), string);

@@ -21,8 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setList:(id)args;
 - (NSString* )toString:(id __nullable)unused;
 
-- (GAIEcommerceProductAction*)native;
-
 @end
 
 NS_ASSUME_NONNULL_END

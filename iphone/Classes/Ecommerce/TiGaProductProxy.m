@@ -77,7 +77,7 @@
 
 #pragma mark Internals
 
--(void) handleCustomDimensions:(NSDictionary*)dimensions
+- (void)handleCustomDimensions:(NSDictionary*)dimensions
 {
     [dimensions enumerateKeysAndObjectsUsingBlock:^(id key, NSString* value, BOOL* stop) {
         NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
@@ -87,7 +87,7 @@
     }];
 }
 
--(void) handleCustomMetrics:(NSDictionary*)metrics
+- (void)handleCustomMetrics:(NSDictionary*)metrics
 {
     [metrics enumerateKeysAndObjectsUsingBlock:^(id key, NSNumber* value, BOOL* stop) {
         NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
@@ -95,10 +95,6 @@
         
         [_product setCustomMetric:[index unsignedIntegerValue] value:value];
     }];
-}
-
-- (GAIEcommerceProduct*)native {
-    return _product;
 }
 
 - (void)log:(NSString*)string forLevel:(NSString*)level

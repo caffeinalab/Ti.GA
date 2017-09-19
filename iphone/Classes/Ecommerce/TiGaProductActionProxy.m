@@ -101,11 +101,6 @@
 
 #pragma mark Internals
 
-- (GAIEcommerceProductAction*)native
-{
-    return _productAction;
-}
-
 - (void)handleTransaction:(NSDictionary*)transaction
 {
     id identifier = [transaction objectForKey:@"id"];

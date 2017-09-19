@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString*)toString:(id __nullable)unused;
 
-- (GAIEcommerceProduct*)native;
-
 @end
 
 NS_ASSUME_NONNULL_END
