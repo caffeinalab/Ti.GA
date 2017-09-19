@@ -7,6 +7,9 @@
 
 #import "TiGaTrackerProxy.h"
 #import "TiUtils.h"
+#import "TiGaProductProxy.h"
+#import "TiGaProductActionProxy.h"
+#import "TiGaScreenViewBuilderProxy.h"
 #import "GAIDictionaryBuilder.h"
 #import "GAIFields.h"
 
@@ -94,6 +97,75 @@
         NSLog(@"[DEBUG] Ending Session");
     }
     [_tracker send:[[[GAIDictionaryBuilder createScreenView] set:@"end" forKey:kGAISessionControl] build] ];
+}
+
+- (void)send:(id)args
+{
+    TiGaScreenViewBuilderProxy* screenViewBuilderProxy;
+    NSString* screenName;
+    
+    ENSURE_UI_THREAD(send, args);
+    ENSURE_ARG_COUNT(args, 2)
+    ENSURE_ARG_AT_INDEX(screenViewBuilderProxy, args, 0, TiGaScreenViewBuilderProxy);
+    ENSURE_ARG_AT_INDEX(screenName, args, 1, NSString);
+
+    [_tracker set:kGAIScreenName value:screenName];
+    [_tracker send:[screenViewBuilderProxy.dictionary build]];
+    
+    if (_debug) {
+        NSLog(@"[DEBUG] sent custom screenView for name: %@", screenName);
+    }
+}
+
+- (void)trackProductImpression:(id)args
+{
+    TiGaProductProxy* productProxy;
+    NSString* screenName;
+    NSString* impressionList;
+    NSString* impressionSource;
+    
+    ENSURE_UI_THREAD(trackProductAction, args);
+    ENSURE_ARG_AT_INDEX(productProxy, args, 0, TiGaProductProxy);
+    ENSURE_ARG_AT_INDEX(screenName, args, 1, NSString);
+    ENSURE_ARG_OR_NIL_AT_INDEX(impressionList, args, 2, NSString);
+    ENSURE_ARG_OR_NIL_AT_INDEX(impressionSource, args, 3, NSString);
+    
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+    
+    [builder addProductImpression:productProxy.product
+                   impressionList:impressionList
+                 impressionSource:impressionSource];
+    
+    [_tracker set:kGAIScreenName value:screenName];
+    [_tracker send:[builder build]];
+    
+    if (_debug) {
+        NSLog(@"[DEBUG] trackProductImpression for screen: %@", screenName);
+    }
+}
+
+- (void)trackProductAction:(id)args
+{
+    TiGaProductProxy* productProxy;
+    TiGaProductActionProxy* productActionProxy;
+    NSString* screenName;
+    
+    ENSURE_UI_THREAD(trackProductAction, args);
+    ENSURE_ARG_COUNT(args, 3);
+    ENSURE_ARG_AT_INDEX(productProxy, args, 0, TiGaProductProxy);
+    ENSURE_ARG_AT_INDEX(productActionProxy, args, 1, TiGaProductActionProxy);
+    ENSURE_ARG_AT_INDEX(screenName, args, 2, NSString);
+    
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+    [builder setProductAction:productActionProxy.productAction];
+    [builder addProduct:productProxy.product];
+    
+    [_tracker set:kGAIScreenName value:screenName];
+    [_tracker send:[builder build]];
+    
+    if (_debug) {
+        NSLog(@"[DEBUG] trackProductAction for screen: %@", screenName);
+    }
 }
 
 -(void)addScreenView:(id)args
