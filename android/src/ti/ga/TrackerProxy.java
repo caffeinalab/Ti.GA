@@ -153,6 +153,12 @@ public class TrackerProxy  extends KrollProxy {
 	}
 
 	@Kroll.method
+	public void send(ScreenViewBuilderProxy screenViewBuilder, String screenName) {
+		_tracker.setScreenName(screenName);
+		_tracker.send(screenViewBuilder.getNative().build());
+	}
+
+	@Kroll.method
 	public void addScreenView(String screenName, HashMap props)
 	{
 		final HitBuilders.AppViewBuilder hitBuilder = new HitBuilders.AppViewBuilder();
