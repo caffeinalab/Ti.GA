@@ -72,20 +72,20 @@ public class ProductActionProxy extends KrollProxy {
         this.productAction.setTransactionAffiliation(transaction.getString("affiliation"));
         this.productAction.setTransactionCouponCode(transaction.getString("coupon"));
 
-        if (transaction.containsKey("tax"))
+        if (transaction.get("tax") != null)
             this.productAction.setTransactionTax(transaction.getDouble("tax"));
 
-        if (transaction.containsKey("revenue"))
+        if (transaction.get("revenue") != null)
             this.productAction.setTransactionRevenue(transaction.getDouble("revenue"));
 
-        if (transaction.containsKey("shipping"))
+        if (transaction.get("shipping") != null)
             this.productAction.setTransactionShipping(transaction.getDouble("shipping"));
     }
 
     private void handleCheckout(KrollDict checkout) {
         this.productAction.setCheckoutOptions(checkout.getString("options"));
 
-        if (checkout.containsKey("step"))
+        if (checkout.get("step") != null)
             this.productAction.setCheckoutStep(checkout.getInt("step"));
     }
 

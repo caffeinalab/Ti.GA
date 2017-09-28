@@ -41,18 +41,18 @@
     }
     _useSecure = [TiUtils  boolValue:@"useSecure" properties:properties def:YES];
     _trackerId = [TiUtils stringValue:@"trackingId" properties:properties];
-  
+
     if(_trackerId == nil){
         [self createDefaultTracker: nil];
     }else{
         [self createTracker: _trackerId];
     }
-    
+
     [_tracker set:kGAIAnonymizeIp value:@"1"];
     [_tracker set:kGAIUseSecure value:[(_useSecure? @YES : @NO) stringValue]];
-    
+
     _tracker.allowIDFACollection = [TiUtils boolValue:@"enableAdvertisingIdCollection" properties:properties def:NO];
-    
+
     [_tracker set:kGAIAnonymizeIp value:@"1"];
     [_tracker set:kGAIUseSecure value:[(_useSecure? @YES : @NO) stringValue]];
 
@@ -102,21 +102,17 @@
 - (void)set:(id)args
 {
     ENSURE_UI_THREAD(set, args);
-    
+
     NSString* key;
     NSString* value;
-    
+
     if ([args count] == 2) {
         ENSURE_ARG_AT_INDEX(key, args, 0, NSString);
         ENSURE_ARG_AT_INDEX(value, args, 1, NSString);
-        
-        NSLog(@"[INFO] set key to %@ and value to %@", key, value);
-        
+    
         [_tracker set:key value:value];
     } else {
         for (key in args) {
-            NSLog(@"[INFO] set key to %@ and value to %@", key, value);
-            
             [_tracker set:key value:[args objectForKey:key]];
         }
     }
@@ -125,13 +121,13 @@
 - (void)send:(id)args
 {
     TiGaDictionaryBuilderProxy* builderProxy;
-    
+
     ENSURE_UI_THREAD(send, args);
     ENSURE_ARG_COUNT(args, 1)
     ENSURE_ARG_AT_INDEX(builderProxy, args, 0, TiGaDictionaryBuilderProxy);
 
     [_tracker send:[builderProxy.dictionary build]];
-    
+
     if (_debug) {
         NSLog(@"[DEBUG] sent custom builder dictionary");
     }
@@ -143,22 +139,22 @@
     NSString* screenName;
     NSString* impressionList;
     NSString* impressionSource;
-    
+
     ENSURE_UI_THREAD(trackProductAction, args);
     ENSURE_ARG_AT_INDEX(productProxy, args, 0, TiGaProductProxy);
     ENSURE_ARG_AT_INDEX(screenName, args, 1, NSString);
     ENSURE_ARG_OR_NIL_AT_INDEX(impressionList, args, 2, NSString);
     ENSURE_ARG_OR_NIL_AT_INDEX(impressionSource, args, 3, NSString);
-    
+
     GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
-    
+
     [builder addProductImpression:productProxy.product
                    impressionList:impressionList
                  impressionSource:impressionSource];
-    
+
     [_tracker set:kGAIScreenName value:screenName];
     [_tracker send:[builder build]];
-    
+
     if (_debug) {
         NSLog(@"[DEBUG] trackProductImpression for screen: %@", screenName);
     }
@@ -169,20 +165,20 @@
     TiGaProductProxy* productProxy;
     TiGaProductActionProxy* productActionProxy;
     NSString* screenName;
-    
+
     ENSURE_UI_THREAD(trackProductAction, args);
     ENSURE_ARG_COUNT(args, 3);
     ENSURE_ARG_AT_INDEX(productProxy, args, 0, TiGaProductProxy);
     ENSURE_ARG_AT_INDEX(productActionProxy, args, 1, TiGaProductActionProxy);
     ENSURE_ARG_AT_INDEX(screenName, args, 2, NSString);
-    
+
     GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
     [builder setProductAction:productActionProxy.productAction];
     [builder addProduct:productProxy.product];
-    
+
     [_tracker set:kGAIScreenName value:screenName];
     [_tracker send:[builder build]];
-    
+
     if (_debug) {
         NSLog(@"[DEBUG] trackProductAction for screen: %@", screenName);
     }
@@ -198,7 +194,7 @@
     if(_debug){
         NSLog(@"[DEBUG] addScreenView: %@", screen);
     }
-    
+
     if([args count] > 1) {
         [self handleCustomFields:builder jshash:[args objectAtIndex:1]];
     }
@@ -245,7 +241,7 @@
     NSNumber *time = [NSNumber numberWithFloat:[TiUtils floatValue:@"time" properties:args]];
     NSString *name = [TiUtils stringValue:@"name" properties:args];
     NSString *label = [TiUtils stringValue:@"label" properties:args];
-    
+
     GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createTimingWithCategory:category
                                                                           interval:time
                                                                               name:name
@@ -256,7 +252,7 @@
 
     [self handleCustomFields:builder jshash:args];
     [_tracker send:[builder build]];
-  
+
     [_tracker send:[[GAIDictionaryBuilder createTimingWithCategory:category
                                                                 interval:time
                                                                 name:name
@@ -292,7 +288,7 @@
     NSString *network = [TiUtils stringValue:@"network" properties:args];
     NSString *action = [TiUtils stringValue:@"action" properties:args];
     NSString *target = [TiUtils stringValue:@"target" properties:args];
-  
+
     GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createSocialWithNetwork:network
                                                                            action:action
                                                                            target:target];
@@ -300,10 +296,10 @@
     if(_debug){
         NSLog(@"[DEBUG] addSocialNetwork network: %@ action: %@ arget: %@", network, action, target);
     }
-    
+
     [self handleCustomFields:builder jshash:args];
     [_tracker send:[builder build]];
-    
+
 }
 
 // Common way to deal with adding customDimensions and customMetrics fields
@@ -315,8 +311,8 @@
     NSNumber *metricVal;
     NSDictionary *customDimensions;
     NSDictionary *customMetrics;
-    
-    
+
+
     ENSURE_ARG_OR_NIL_FOR_KEY(customDimensions, args, @"customDimensions", NSDictionary);
     if ([customDimensions count]) {
         for(key in customDimensions) {
@@ -325,7 +321,7 @@
             [builder set:val forKey:[GAIFields customDimensionForIndex:[key integerValue]]];
         }
     }
-    
+
     ENSURE_ARG_OR_NIL_FOR_KEY(customMetrics, args, @"customMetrics", NSDictionary);
     if ([customMetrics count]) {
         for(key in customMetrics) {

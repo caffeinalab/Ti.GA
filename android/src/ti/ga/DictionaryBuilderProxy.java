@@ -25,9 +25,7 @@ public class DictionaryBuilderProxy extends KrollProxy {
     }
 
     public void handleCreationDict(KrollDict args) {
-        Log.d(LCAT, "Initializing event builder proxy with a size of "+args.size());
-
-        if (args.containsKey("type") && args.getString("type").equals("event")) {
+        if (args.containsKey("type") && args.getString("type").equals(TigaModule.BUILDER_TYPE_EVENT)) {
             this.builder = new EventBuilder(args.getKrollDict("options"));
         } else {
             this.builder = new ScreenViewBuilder();
@@ -54,7 +52,7 @@ public class DictionaryBuilderProxy extends KrollProxy {
         this.builder.addImpression(product.getNative(), impressionList);
     }
 
-    public Object getNative() {
+    public DictionaryBuilderInterface getNative() {
         return this.builder;
     }
 }

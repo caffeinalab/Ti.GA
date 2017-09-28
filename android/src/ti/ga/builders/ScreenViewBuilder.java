@@ -17,8 +17,6 @@ public class ScreenViewBuilder implements DictionaryBuilderInterface {
     private HitBuilders.ScreenViewBuilder builder;
 
     public ScreenViewBuilder() {
-        Log.d(LCAT, "Initializing screen view builder");
-
         this.builder = new HitBuilders.ScreenViewBuilder();
     }
 
@@ -38,7 +36,7 @@ public class ScreenViewBuilder implements DictionaryBuilderInterface {
         this.builder.addImpression(product, impressionList);
     }
 
-    public Object getNative() {
+    public HitBuilders.ScreenViewBuilder getNative() {
         return this.builder;
     }
 }

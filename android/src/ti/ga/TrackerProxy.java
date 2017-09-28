@@ -7,6 +7,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -14,16 +15,19 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.util.TiConvert;
 
+import ti.ga.builders.DictionaryBuilderInterface;
+import ti.ga.builders.EventBuilder;
+import ti.ga.builders.ScreenViewBuilder;
 import ti.ga.ecommerce.ProductProxy;
 import ti.ga.ecommerce.ProductActionProxy;
 import ti.ga.ecommerce.PromotionProxy;
 
 @Kroll.proxy(creatableInModule=TigaModule.class)
 public class TrackerProxy extends KrollProxy {
-
 	private final GoogleAnalytics _ga;
 	private Tracker _tracker;
 	private boolean _debug = false;
+	private static final String LCAT = "TrackerProxy";
 
 	public TrackerProxy()
 	{
@@ -153,9 +157,45 @@ public class TrackerProxy extends KrollProxy {
 	}
 
 	@Kroll.method
-	public void send(Object builder, String screenName) {
-		// _tracker.setScreenName(screenName);
-		// _tracker.send(screenViewBuilder.getNative().build());
+	public void set(Object[] args) {
+		Log.d(LCAT, "Received "+args.length+" arguments");
+
+		if (args.length == 2) {
+			String key = TiConvert.toString(args[0]);
+			String value = TiConvert.toString(args[1]);
+
+			Log.d(LCAT, "Setting key "+key+" with value to "+value);
+
+			_tracker.set(key, value);
+		} else {
+			KrollDict options = (KrollDict)args[0];
+
+			for (Object current : options.keySet()) {
+				String key = TiConvert.toString(current);
+				String value = TiConvert.toString(options.get(key));
+
+				Log.d(LCAT, "Setting key "+key+" with value to "+value);
+
+				_tracker.set(key, value);
+			}
+		}
+	}
+
+	@Kroll.method
+	public void send(DictionaryBuilderProxy builderProxy, @Kroll.argument(optional=true) String screenName) {
+		if (screenName != null) {
+			_tracker.setScreenName(screenName);
+		}
+
+		if (builderProxy.getNative() instanceof ScreenViewBuilder) {
+			ScreenViewBuilder builder = (ScreenViewBuilder)builderProxy.getNative();
+
+			_tracker.send(builder.getNative().build());
+		} else if (builderProxy.getNative() instanceof ScreenViewBuilder) {
+			EventBuilder builder = (EventBuilder)builderProxy.getNative();
+
+			_tracker.send(builder.getNative().build());
+		}
 	}
 
 	@Kroll.method

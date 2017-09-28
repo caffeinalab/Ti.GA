@@ -17,9 +17,17 @@ public class EventBuilder implements DictionaryBuilderInterface {
     private HitBuilders.EventBuilder builder;
 
     public EventBuilder(KrollDict properties) {
-        Log.d(LCAT, "Initializing event builder proxy with a size of "+properties.size());
+        this.builder = new HitBuilders.EventBuilder();
+        this.builder.setCategory(properties.getString("name"));
+        this.builder.setAction(properties.getString("action"));
 
-        this.builder = new HitBuilders.EventBuilder(properties.getString("name"), properties.getString("action"));
+        if (properties.containsKey("label")) {
+            this.builder.setLabel(properties.getString("label"));
+        }
+
+        if (properties.containsKey("value")) {
+            this.builder.setValue(Long.valueOf(properties.getInt("value").longValue()));
+        }
     }
 
     public void addProduct(Product product) {
@@ -38,7 +46,7 @@ public class EventBuilder implements DictionaryBuilderInterface {
         this.builder.addImpression(product, impressionList);
     }
 
-    public Object getNative() {
+    public HitBuilders.EventBuilder getNative() {
         return this.builder;
     }
 }
