@@ -19,7 +19,7 @@ import ti.ga.ecommerce.ProductActionProxy;
 import ti.ga.ecommerce.PromotionProxy;
 
 @Kroll.proxy(creatableInModule=TigaModule.class)
-public class TrackerProxy  extends KrollProxy {
+public class TrackerProxy extends KrollProxy {
 
 	private final GoogleAnalytics _ga;
 	private Tracker _tracker;
@@ -153,13 +153,13 @@ public class TrackerProxy  extends KrollProxy {
 	}
 
 	@Kroll.method
-	public void send(ScreenViewBuilderProxy screenViewBuilder, String screenName) {
-		_tracker.setScreenName(screenName);
-		_tracker.send(screenViewBuilder.getNative().build());
+	public void send(Object builder, String screenName) {
+		// _tracker.setScreenName(screenName);
+		// _tracker.send(screenViewBuilder.getNative().build());
 	}
 
 	@Kroll.method
-	public void addScreenView(String screenName, HashMap props)
+	public void addScreenView(String screenName, @Kroll.argument(optional=true) HashMap props)
 	{
 		final HitBuilders.AppViewBuilder hitBuilder = new HitBuilders.AppViewBuilder();
 		// Set screen name.
@@ -174,8 +174,10 @@ public class TrackerProxy  extends KrollProxy {
 			}
 		};
 
-		handleCustomDimensions(builderWrapper, props.get("customDimension"));
-		handleCustomMetrics(builderWrapper, props.get("customMetrics"));
+		if (props != null) {
+			handleCustomDimensions(builderWrapper, props.get("customDimension"));
+			handleCustomMetrics(builderWrapper, props.get("customMetrics"));
+		}
 
 		// Send a screen view.
 		_tracker.send(hitBuilder.build());
