@@ -7,17 +7,15 @@
 #import "TiProxy.h"
 #import "GAIDictionaryBuilder.h"
 
-@interface TiGaScreenViewBuilderProxy : TiProxy {
+@interface TiGaDictionaryBuilderProxy : TiProxy {
 
 }
 
 @property (nonatomic, retain) GAIDictionaryBuilder* dictionary;
 
 - (void)addProduct:(id)arg;
-- (void)addProductAction:(id)arg;
+- (void)setProductAction:(id)arg;
 - (void)addPromotion:(id)arg;
 - (void)addImpression:(id)arg;
-
-- (GAIDictionaryBuilder*)native;
 
 @end

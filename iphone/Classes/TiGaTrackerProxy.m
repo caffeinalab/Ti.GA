@@ -7,9 +7,9 @@
 
 #import "TiGaTrackerProxy.h"
 #import "TiUtils.h"
+#import "TiGaDictionaryBuilderProxy.h"
 #import "TiGaProductProxy.h"
 #import "TiGaProductActionProxy.h"
-#import "TiGaScreenViewBuilderProxy.h"
 #import "GAIDictionaryBuilder.h"
 #import "GAIFields.h"
 
@@ -99,21 +99,41 @@
     [_tracker send:[[[GAIDictionaryBuilder createScreenView] set:@"end" forKey:kGAISessionControl] build] ];
 }
 
+- (void)set:(id)args
+{
+    ENSURE_UI_THREAD(set, args);
+    
+    NSString* key;
+    NSString* value;
+    
+    if ([args count] == 2) {
+        ENSURE_ARG_AT_INDEX(key, args, 0, NSString);
+        ENSURE_ARG_AT_INDEX(value, args, 1, NSString);
+        
+        NSLog(@"[INFO] set key to %@ and value to %@", key, value);
+        
+        [_tracker set:key value:value];
+    } else {
+        for (key in args) {
+            NSLog(@"[INFO] set key to %@ and value to %@", key, value);
+            
+            [_tracker set:key value:[args objectForKey:key]];
+        }
+    }
+}
+
 - (void)send:(id)args
 {
-    TiGaScreenViewBuilderProxy* screenViewBuilderProxy;
-    NSString* screenName;
+    TiGaDictionaryBuilderProxy* builderProxy;
     
     ENSURE_UI_THREAD(send, args);
-    ENSURE_ARG_COUNT(args, 2)
-    ENSURE_ARG_AT_INDEX(screenViewBuilderProxy, args, 0, TiGaScreenViewBuilderProxy);
-    ENSURE_ARG_AT_INDEX(screenName, args, 1, NSString);
+    ENSURE_ARG_COUNT(args, 1)
+    ENSURE_ARG_AT_INDEX(builderProxy, args, 0, TiGaDictionaryBuilderProxy);
 
-    [_tracker set:kGAIScreenName value:screenName];
-    [_tracker send:[screenViewBuilderProxy.dictionary build]];
+    [_tracker send:[builderProxy.dictionary build]];
     
     if (_debug) {
-        NSLog(@"[DEBUG] sent custom screenView for name: %@", screenName);
+        NSLog(@"[DEBUG] sent custom builder dictionary");
     }
 }
 
