@@ -144,7 +144,7 @@ public class TrackerProxy  extends KrollProxy {
 			}
 		};
 
-		handleCustomDimensions(builderWrapper, props.get("customDimension"));
+		handleCustomDimensions(builderWrapper, props.get("customDimensions"));
 		handleCustomMetrics(builderWrapper, props.get("customMetrics"));
 
 		// Send a screen view.
@@ -180,7 +180,7 @@ public class TrackerProxy  extends KrollProxy {
 			}
 		};
 
-		handleCustomDimensions(builderWrapper, props.get("customDimension"));
+		handleCustomDimensions(builderWrapper, props.get("customDimensions"));
 		handleCustomMetrics(builderWrapper, props.get("customMetrics"));
 
 		_tracker.send(hitBuilder.build());
@@ -219,7 +219,7 @@ public class TrackerProxy  extends KrollProxy {
 			}
 		};
 
-		handleCustomDimensions(builderWrapper, props.get("customDimension"));
+		handleCustomDimensions(builderWrapper, props.get("customDimensions"));
 		handleCustomMetrics(builderWrapper, props.get("customMetrics"));
 
 		// Build and send timing.
@@ -274,7 +274,7 @@ public class TrackerProxy  extends KrollProxy {
 			}
 		};
 
-		handleCustomDimensions(builderWrapper, props.get("customDimension"));
+		handleCustomDimensions(builderWrapper, props.get("customDimensions"));
 		handleCustomMetrics(builderWrapper, props.get("customMetrics"));
 
 		// Build and send social interaction.
